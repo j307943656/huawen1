@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電力重組的漫遊者：3000年的關鍵抉擇</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'glitch': 'glitch 1s linear infinite',
+                        'scanline': 'scanline 6s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        glitch: {
+                            '0%, 100%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' },
+                        },
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #0d1117;
+            overflow-x: hidden;
+        }
+        /* 自訂滾動條 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+        /* 霓虹發光陰影 */
+        .neon-shadow-green {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+        .neon-shadow-blue {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .neon-shadow-red {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+        .neon-shadow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+        }
+        /* 螢幕掃描線濾鏡 */
+        .crt::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            aspect-ratio: auto;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        /* 時空傳送漩渦動畫 */
+        @keyframes warp {
+            0% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg) blur(0px); opacity: 1; }
+            50% { transform: scale(3) rotate(180deg); filter: hue-rotate(180deg) blur(5px); opacity: 0.5; }
+            100% { transform: scale(0.1) rotate(360deg); filter: hue-rotate(360deg) blur(20px); opacity: 0; }
+        }
+        .warp-active {
+            animation: warp 2.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="text-gray-100 flex flex-col min-h-screen relative antialiased">
+
+    <!-- 動態背景粒子 Canvas -->
+    <canvas id="particleCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- CRT 螢幕掃描線光斑效果 -->
+    <div class="crt absolute inset-0 w-full h-full pointer-events-none z-10 opacity-30"></div>
+
+    <!-- 頂部導覽列 (全域) -->
+    <header class="w-full border-b border-gray-800 bg-gray-900/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                    <i class="fa-solid fa-bolt-lightning animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-300">電力重組的漫遊者</h1>
+                    <p class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">3000年的關鍵抉擇 · 環保教育冒險</p>
+                </div>
+            </div>
+            
+            <!-- 狀態欄狀態儀表 -->
+            <div id="statusBar" class="flex items-center gap-4 sm:gap-6 bg-gray-950/60 px-4 py-2 rounded-xl border border-gray-800/80 w-full sm:w-auto justify-around">
+                <!-- 全球電網剩餘 -->
+                <div class="flex items-center gap-3">
+                    <div class="relative flex items-center justify-center">
+                        <i id="powerIcon" class="fa-solid fa-battery-three-quarters text-emerald-400 text-lg sm:text-xl transition-all duration-500"></i>
+                        <span class="absolute -top-1 -right-1 flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">電網剩餘 (Grid Power)</div>
+                        <div class="flex items-center gap-2">
+                            <span id="powerText" class="text-sm sm:text-base font-extrabold text-emerald-400 transition-colors duration-500">100%</span>
+                            <div class="w-16 sm:w-20 bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                                <div id="powerBar" class="bg-emerald-500 h-full rounded-full transition-all duration-700" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分割線 -->
+                <div class="h-8 w-px bg-gray-800"></div>
+
+                <!-- 大氣碳排放度 -->
+                <div class="flex items-center gap-3">
+                    <div class="relative flex items-center justify-center">
+                        <i id="carbonIcon" class="fa-solid fa-smog text-sky-400 text-lg sm:text-xl transition-all duration-500"></i>
+                    </div>
+                    <div>
+                        <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">大氣碳排放 (Carbon)</div>
+                        <div class="flex items-center gap-2">
+                            <span id="carbonText" class="text-sm sm:text-base font-extrabold text-sky-400 transition-colors duration-500">350 ppm</span>
+                            <div class="w-16 sm:w-20 bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                                <div id="carbonBar" class="bg-sky-500 h-full rounded-full transition-all duration-700" style="width: 35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 遊戲主要內容區 -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 z-20 relative">
+        <div id="gameWindow" class="w-full max-w-5xl bg-gray-900/60 border border-gray-800/80 rounded-2xl backdrop-blur-md overflow-hidden flex flex-col md:flex-row transition-all duration-500 shadow-2xl">
+            
+            <!-- 左側/上方：人物視覺、立繪頭像與環境指示（已加寬、替換科幻背景圖片、縮小頭像並置於左上方） -->
+            <div id ="sceneBackground" class="w-full md:w-[46%] border-b md:border-b-0 md:border-r border-gray-800 p-6 flex flex-col justify-between relative overflow-hidden min-h-[340px] md:min-h-[480px] bg-cover bg-center" style="background-image: url();">
+                <!-- 深色漸層覆蓋層，確保文字與頭像可讀性 -->
+                <div class="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-gray-950/90 to-transparent"></div>
+                <!-- 裝飾用科技網格 -->
+                <div class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:16px_16px] z-0"></div>
+                
+                <!-- 頂部資訊區：頭像移至左上方，Timeline 與名稱靠右橫向排列 -->
+                <div class="w-full flex items-start gap-4 z-10 relative">
+                    <!-- 人物肖像展示區 (動態 SVG - 縮小且居左) -->
+                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 flex items-center justify-center">
+                        <!-- 頭像背景發光環 -->
+                        <div id="avatarGlow" class="absolute inset-0 rounded-full bg-violet-600/15 filter blur-lg transition-all duration-1000 animate-pulse-slow"></div>
+                        
+                        <!-- SVG 頭像載入容器 -->
+                        <div id="avatarContainer" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gray-800/80 p-1.5 bg-gray-900/95 shadow-inner flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
+                            <!-- 動態插入人物 SVG -->
+                        </div>
+                    </div>
+
+                    <!-- 人物資訊與時光徽章 -->
+                    <div class="flex flex-col gap-2 mt-2">
+                        <!-- 環境年份/時光提示標籤 -->
+                        <div class="relative">
+                            <span id="timelineBadge" class="px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 tracking-wider">
+                                <i class="fa-solid fa-clock mr-1"></i> 2026 年夏季 · 現實世界
+                            </span>
+                        </div>
+                        
+                        <!-- 姓名與稱號 -->
+                        <div class="pl-1">
+                            <h2 id="charName" class="text-base sm:text-lg font-black text-gray-100 tracking-wider">瑞廷</h2>
+                            <p id="charTitle" class="text-[10px] sm:text-xs text-gray-400 font-medium tracking-wide">當代青年 / 主角</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部對白人物說話泡泡 (移至最下方，半透明毛玻璃效果) -->
+                <div class="w-full bg-gray-950/70 border border-gray-800/80 rounded-xl p-4 text-left relative z-10 backdrop-blur-md mt-6">
+                    <p class="text-[9px] uppercase font-bold tracking-widest text-violet-400 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-message animate-pulse"></i> 終端通訊對白 (Dialogue)
+                    </p>
+                    <p id="charSpeech" class="text-xs sm:text-sm italic text-gray-200 leading-relaxed">「這股悶熱……好像在預示著某種不可逆的未來……」</p>
+                </div>
+            </div>
+
+            <!-- 右側/下方：故事文字、互動選項、反思面板 (微調寬度至 54%) -->
+            <div id="storyConsole" class="w-full md:w-[54%] p-6 sm:p-8 flex flex-col justify-between min-h-[420px] relative z-20">
+                
+                <!-- 故事段落 & 進度資訊 -->
+                <div>
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-3 mb-4">
+                        <span id="chapterTitle" class="text-xs font-bold uppercase tracking-widest text-violet-400">序章：2026年夏天的警鐘</span>
+                        <span id="stepProgress" class="text-[10px] text-gray-500 font-mono">STEP 01/04</span>
+                    </div>
+
+                    <!-- 滾動故事正文 -->
+                    <div id="storyTextBox" class="text-sm sm:text-base text-gray-300 leading-relaxed space-y-4 max-h-[250px] overflow-y-auto pr-2">
+                        <!-- 故事動態載入區 -->
+                    </div>
+                </div>
+
+                <!-- 互動選項/反思輸入容器 -->
+                <div class="mt-6 pt-4 border-t border-gray-800/80">
+                    <p id="actionPrompt" class="text-xs font-semibold text-gray-400 mb-3 tracking-wide">
+                        <i class="fa-solid fa-angles-right text-violet-500 animate-pulse mr-1"></i> 請做出你的關鍵抉擇：
+                    </p>
+                    
+                    <!-- 選項按鈕區 -->
+                    <div id="optionsGroup" class="space-y-3">
+                        <!-- 動態插入選項按鈕 -->
+                    </div>
+
+                    <!-- 角色創建專用區 (初始顯示，開始遊戲後隱藏) -->
+                    <div id="setupGroup" class="space-y-4">
+                        <!-- 姓名輸入 -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+                                <i class="fa-solid fa-signature text-violet-400"></i> 請輸入你的漫遊者姓名：
+                            </label>
+                            <input type="text" id="playerNameInput" value="瑞廷" maxlength="10" class="w-full bg-gray-950/80 border border-gray-800 hover:border-violet-500/50 focus:border-violet-500 focus:outline-none rounded-xl px-4 py-2.5 text-sm text-gray-200 tracking-wider transition-all" placeholder="例如：瑞廷 / Rui-Ting">
+                        </div>
+
+                        <!-- 性別選擇 -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                                <i class="fa-solid fa-venus-mars text-violet-400"></i> 請選擇生理性別特徵 (頭像與色彩將即時同步變更)：
+                            </label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button onclick="selectGender('m')" id="genderBtn_m" class="py-2.5 rounded-xl border border-violet-500 bg-violet-950/20 text-violet-300 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
+                                    <i class="fa-solid fa-mars"></i> 男性
+                                </button>
+                                <button onclick="selectGender('f')" id="genderBtn_f" class="py-2.5 rounded-xl border border-gray-800 bg-gray-950/40 text-gray-400 hover:border-gray-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-venus"></i> 女性
+                                </button>
+                                <button onclick="selectGender('nb')" id="genderBtn_nb" class="py-2.5 rounded-xl border border-gray-800 bg-gray-950/40 text-gray-400 hover:border-gray-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-genderless"></i> 中性/其他
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 啟動按鈕 -->
+                        <button onclick="startGame()" class="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 rounded-xl font-bold text-sm tracking-wider shadow-lg neon-shadow-purple transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 mt-2">
+                            <span>登錄系統，開啟時空漫遊</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- 反思輸入框 (初始隱藏) -->
+                    <div id="reflectionGroup" class="hidden space-y-4">
+                        <textarea id="reflectionInput" rows="4" class="w-full bg-gray-950/80 border border-gray-800 rounded-xl p-3.5 text-sm text-gray-300 focus:outline-none focus:border-violet-500 transition-all placeholder:text-gray-600 resize-none" placeholder="輸入你在「當下的科技便利」與「地球永續保護」之間的平衡看法，或是在日常中能做出的具體改變..."></textarea>
+                        <button id="submitReflection" class="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 rounded-xl font-bold text-sm tracking-wider shadow-lg neon-shadow-purple transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2">
+                            <span>提交反思，完成時光漫遊</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- 重置/重玩按鈕 -->
+                    <div id="resetGroup" class="hidden flex justify-center mt-4">
+                        <button onclick="restartGame()" class="text-xs font-medium text-gray-500 hover:text-violet-400 transition-colors flex items-center gap-1.5 py-1 px-3 rounded-full border border-gray-800 hover:border-violet-500/30">
+                            <i class="fa-solid fa-rotate-right"></i> 重新開始時空漫遊
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 結算證書面板 (初始隱藏) -->
+        <div id="certificatePanel" class="hidden w-full max-w-2xl bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900 border border-amber-500/40 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden text-center z-30">
+            <!-- 證書金色飾條 -->
+            <div class="absolute inset-0 border-[6px] border-amber-500/10 rounded-3xl pointer-events-none"></div>
+            <!-- 背景輻射光束 -->
+            <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-amber-500/5 rounded-full filter blur-3xl pointer-events-none"></div>
+
+            <div class="w-16 h-16 bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center text-amber-400 text-3xl mx-auto mb-4 animate-bounce">
+                <i class="fa-solid fa-award"></i>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase">時空漫遊者通關證書</h2>
+            <p class="text-[10px] text-amber-500/80 tracking-widest uppercase font-bold mt-1">Eco-Chronicle Explorer Passport</p>
+
+            <!-- 證書頭像 -->
+            <div id="certAvatarContainer" class="w-20 h-20 rounded-full border-2 border-amber-500/40 p-1 bg-gray-950 mx-auto mt-4 mb-2 shadow-lg">
+                <!-- 動態載入玩家最終頭像 -->
+            </div>
+
+            <div class="my-6 border-y border-gray-800 py-4 max-w-md mx-auto">
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    茲證明時空漫遊者 <strong id="certUserName" class="text-violet-400 text-sm">瑞廷</strong> 已成功完成跨越西元 2026 至 3000 年的能源探索之旅。在重重電力危機中展現了關鍵抉擇，並留下了深刻的環境素養反思。
+                </p>
+            </div>
+
+            <!-- 漫遊統計數據 -->
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-6 bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">最終世界電網</p>
+                    <p id="certPower" class="text-xl sm:text-2xl font-black text-emerald-400 mt-1">90%</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">最終大氣碳排</p>
+                    <p id="certCarbon" class="text-xl sm:text-2xl font-black text-sky-400 mt-1">350 ppm</p>
+                </div>
+            </div>
+
+            <!-- 玩家獲得評價稱號 -->
+            <div class="mb-6">
+                <p class="text-xs text-gray-500">獲得時空漫遊者評級：</p>
+                <div id="certBadge" class="inline-block mt-2 px-6 py-2 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-400 border border-amber-500/40 text-sm font-extrabold rounded-lg tracking-widest uppercase shadow-md neon-shadow-blue">
+                    永續生態領航員
+                </div>
+            </div>
+
+            <!-- GM 回饋評語 -->
+            <div class="bg-gray-950/60 rounded-xl p-4 text-left border border-gray-800/80 mb-6 max-w-xl mx-auto">
+                <p class="text-xs font-bold text-violet-400 mb-1 flex items-center gap-1">
+                    <i class="fa-solid fa-graduation-cap"></i> 導師深度反思回饋：
+                </p>
+                <p id="feedbackText" class="text-xs text-gray-300 leading-relaxed italic">
+                    回饋加載中...
+                </p>
+            </div>
+
+            <!-- 重玩與分享 -->
+            <div class="flex flex-col sm:flex-row justify-center gap-3 max-w-xs mx-auto">
+                <button onclick="restartGame()" class="py-2.5 px-5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border border-gray-700">
+                    <i class="fa-solid fa-rotate-right text-[10px]"></i> 再次挑戰漫遊
+                </button>
+                <button onclick="copyCertificateInfo()" class="py-2.5 px-5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-violet-500/20">
+                    <i class="fa-solid fa-copy text-[10px]"></i> 複製漫遊證書數據
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 底部版權宣告與宣導 -->
+    <footer class="w-full text-center py-4 text-[10px] text-gray-500 border-t border-gray-800 bg-gray-950/60 backdrop-blur-sm z-20">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 電力重組的漫遊者 · 氣候行動與能源永續模擬</p>
+            <p class="flex items-center gap-3">
+                <span>⚡ SDGS 目標 7 可負擔清潔能源</span>
+                <span>🌍 SDGS 目標 13 氣候行動</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- 動態腳本：處理遊戲邏輯、狀態管理、粒子特效與 SVG 頭像 -->
+    <script>
+        // === 1. 人物動態 SVG 生成器 ===
+        const CharacterAvatars = {
+            // 瑞廷 (2026 現代青年 - 男)
+            ruiting_m: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#1e1e38" stroke="#5b21b6" stroke-width="2"/>
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="20" fill="#fbcfe8"/>
+                    <!-- 髮型 -->
+                    <path d="M 28 40 Q 50 15 72 40 Q 60 25 50 30 Q 40 25 28 40" fill="#1e1b4b"/>
+                    <!-- 眼睛 -->
+                    <circle cx="43" cy="44" r="2.5" fill="#0f172a"/>
+                    <circle cx="57" cy="44" r="2.5" fill="#0f172a"/>
+                    <!-- 嘴巴 -->
+                    <path d="M 46 54 Q 50 50 54 54" stroke="#0f172a" stroke-width="2" fill="none"/>
+                    <!-- 脖子 -->
+                    <rect x="47" y="60" width="6" height="10" fill="#fda4af"/>
+                    <!-- 現代黃T恤 -->
+                    <path d="M 30 75 Q 50 65 70 75 L 75 95 L 25 95 Z" fill="#fbbf24"/>
+                </svg>
+            `,
+            // 瑞廷 (2026 現代青年 - 女)
+            ruiting_f: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#1e1e38" stroke="#ec4899" stroke-width="2"/>
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="19" fill="#fbcfe8"/>
+                    <!-- 髮型 (雙丸子/短髮) -->
+                    <circle cx="32" cy="28" r="8" fill="#1e1b4b"/>
+                    <circle cx="68" cy="28" r="8" fill="#1e1b4b"/>
+                    <path d="M 28 38 Q 50 16 72 38 Q 50 25 28 38" fill="#1e1b4b"/>
+                    <!-- 眼睛 -->
+                    <circle cx="43" cy="44" r="2.5" fill="#0f172a"/>
+                    <circle cx="57" cy="44" r="2.5" fill="#0f172a"/>
+                    <!-- 嘴巴 -->
+                    <path d="M 45 52 Q 50 56 55 52" stroke="#0f172a" stroke-width="2" fill="none"/>
+                    <!-- 脖子 -->
+                    <rect x="47" y="60" width="6" height="10" fill="#fda4af"/>
+                    <!-- 現代桃紅色T恤 -->
+                    <path d="M 30 75 Q 50 65 70 75 L 75 95 L 25 95 Z" fill="#ec4899"/>
+                </svg>
+            `,
+            // 瑞廷 (2026 現代青年 - 中性/非二元)
+            ruiting_nb: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#111827" stroke="#3b82f6" stroke-width="2"/>
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="19" fill="#fbcfe8"/>
+                    <!-- 連帽衣風帽 -->
+                    <path d="M 26 38 C 26 15, 74 15, 74 38 C 74 58, 26 58, 26 38" fill="#1f2937"/>
+                    <!-- 護目全息眼鏡 -->
+                    <rect x="35" y="38" width="30" height="9" rx="3" fill="#3b82f6" opacity="0.9"/>
+                    <line x1="38" y1="42.5" x2="62" y2="42.5" stroke="#93c5fd" stroke-width="1.5" />
+                    <!-- 自信微笑 -->
+                    <path d="M 46 54 Q 50 57 54 54" stroke="#0f172a" stroke-width="2" fill="none"/>
+                    <!-- 脖子 -->
+                    <rect x="47" y="60" width="6" height="10" fill="#fda4af"/>
+                    <!-- 科技感潮流上衣 -->
+                    <path d="M 30 75 L 70 75 L 75 95 L 25 95 Z" fill="#3b82f6"/>
+                </svg>
+            `,
+            // 夏莉 (2026 現代好友)
+            charly: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="18" fill="#fef08a"/>
+                    <!-- 雙馬尾/短髮 -->
+                    <path d="M 32 35 Q 20 40 25 55" stroke="#7c2d12" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    <path d="M 68 35 Q 80 40 75 55" stroke="#7c2d12" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    <path d="M 30 38 Q 50 15 70 38 Q 50 22 30 38" fill="#7c2d12"/>
+                    <!-- 眼睛 -->
+                    <circle cx="44" cy="44" r="2.5" fill="#0f172a"/>
+                    <circle cx="56" cy="44" r="2.5" fill="#0f172a"/>
+                    <!-- 嘴巴 -->
+                    <path d="M 45 52 Q 50 55 55 52" stroke="#0f172a" stroke-width="2" fill="none"/>
+                    <!-- 衣服 -->
+                    <path d="M 32 75 Q 50 66 68 75 L 72 95 L 28 95 Z" fill="#ec4899"/>
+                </svg>
+            `,
+            // 艾莉 (Ending 1_1 綠色城市導航員)
+            ally_navigator: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#064e3b" stroke="#10b981" stroke-width="2" />
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="19" fill="#fbcfe8"/>
+                    <!-- 科技感綠色短髮 -->
+                    <path d="M 28 38 C 28 15, 72 15, 72 38 C 65 25, 35 25, 28 38" fill="#10b981"/>
+                    <!-- 科技護目鏡 -->
+                    <rect x="34" y="38" width="32" height="10" rx="5" fill="#34d399" opacity="0.85" />
+                    <line x1="38" y1="43" x2="62" y2="43" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2 2" />
+                    <!-- 微笑 -->
+                    <path d="M 45 56 Q 50 61 55 56" stroke="#064e3b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <!-- 高領綠色科技衣 -->
+                    <path d="M 30 75 L 70 75 L 75 95 L 25 95 Z" fill="#065f46"/>
+                    <rect x="47" y="62" width="6" height="13" fill="#10b981"/>
+                </svg>
+            `,
+            // 未來原始人 (Ending 1_2 獸皮原始人)
+            primitive: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#451a03" stroke="#f97316" stroke-width="2" />
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="18" fill="#fed7aa"/>
+                    <!-- 蓬亂粗糙的黑髮 -->
+                    <path d="M 25 35 Q 50 5 75 35 Q 70 25 60 20 Q 50 15 40 20 Q 30 25 25 35" fill="#1c1917"/>
+                    <path d="M 28 30 L 22 45 L 34 40 L 28 50 L 38 45" stroke="#1c1917" stroke-width="3" fill="none"/>
+                    <path d="M 72 30 L 78 45 L 66 40 L 72 50 L 62 45" stroke="#1c1917" stroke-width="3" fill="none"/>
+                    <!-- 茫然的眼睛 -->
+                    <circle cx="44" cy="44" r="3" fill="#1c1917"/>
+                    <circle cx="56" cy="44" r="3" fill="#1c1917"/>
+                    <!-- 驚訝的口 -->
+                    <circle cx="50" cy="54" r="4" fill="#7c2d12" />
+                    <!-- 獸皮衣 -->
+                    <path d="M 30 75 Q 50 68 70 75 L 75 95 L 25 95 Z" fill="#7c2d12"/>
+                    <circle cx="38" cy="80" r="2" fill="#fed7aa"/>
+                    <circle cx="62" cy="88" r="3" fill="#fed7aa"/>
+                </svg>
+            `,
+            // 未來科學家 (Ending 2_1 新新能源學者)
+            scientist: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#1e1b4b" stroke="#6366f1" stroke-width="2" />
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="18" fill="#ffedd5"/>
+                    <!-- 俐落高雅灰髮 -->
+                    <path d="M 30 38 Q 50 10 70 38 Q 50 20 30 38" fill="#cbd5e1"/>
+                    <!-- 藍色全息眼鏡 -->
+                    <rect x="32" y="38" width="36" height="9" rx="3" fill="#3b82f6" opacity="0.9"/>
+                    <line x1="32" y1="42" x2="68" y2="42" stroke="#93c5fd" stroke-width="2" />
+                    <!-- 沉穩自信的微笑 -->
+                    <path d="M 46 56 Q 50 59 54 56" stroke="#1e1b4b" stroke-width="2" fill="none"/>
+                    <!-- 未來派白袍 -->
+                    <path d="M 30 75 L 70 75 L 75 95 L 25 95 Z" fill="#f8fafc"/>
+                    <path d="M 50 75 L 50 95" stroke="#6366f1" stroke-width="2"/>
+                </svg>
+            `,
+            // 哨兵巴特 (Ending 2_2 防護罩哨兵)
+            soldier: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#450a0a" stroke="#ef4444" stroke-width="2" />
+                    <!-- 全密閉式戰鬥頭盔 -->
+                    <path d="M 32 25 C 32 15, 68 15, 68 25 L 72 65 C 72 70, 28 70, 28 65 Z" fill="#1e293b" />
+                    <path d="M 32 25 L 68 25 L 72 38 L 28 38 Z" fill="#0f172a" />
+                    <!-- 紅色警告目鏡 -->
+                    <polygon points="36,44 64,44 60,50 40,50" fill="#f87171" />
+                    <line x1="36" y1="47" x2="64" y2="47" stroke="#ef4444" stroke-width="3" />
+                    <!-- 頭盔裝甲防彈衣 -->
+                    <path d="M 26 78 L 74 78 L 78 95 L 22 95 Z" fill="#334155" />
+                </svg>
+            `,
+            // 歷史記錄者 (Ending 3_1 記錄者)
+            recorder: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#1c1917" stroke="#78716c" stroke-width="2" />
+                    <!-- 頭部 -->
+                    <circle cx="50" cy="45" r="18" fill="#f5f5f4" opacity="0.8"/>
+                    <!-- 深色兜帽 -->
+                    <path d="M 28 32 C 28 10, 72 10, 72 32 C 72 55, 28 55, 28 32" fill="#292524"/>
+                    <!-- 面部的單眼全息目鏡 -->
+                    <circle cx="50" cy="42" r="5" fill="#f59e0b" />
+                    <!-- 科技斗篷 -->
+                    <path d="M 26 75 L 74 75 L 78 95 L 22 95 Z" fill="#1c1917"/>
+                </svg>
+            `,
+            // 生存者 (Ending 3_2 垂危倖存者)
+            survivor: `
+                <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#180000" stroke="#dc2626" stroke-width="2" />
+                    <!-- 慘白虛弱的頭部 -->
+                    <circle cx="50" cy="45" r="18" fill="#f3f4f6"/>
+                    <!-- 虛弱無神的黑眼圈 -->
+                    <circle cx="43" cy="42" r="6" fill="#e5e7eb" />
+                    <circle cx="57" cy="42" r="6" fill="#e5e7eb" />
+                    <circle cx="43" cy="43" r="2.5" fill="#374151" />
+                    <circle cx="57" cy="43" r="2.5" fill="#374151" />
+                    <!-- 重型呼吸器/氧氣面罩 -->
+                    <polygon points="40,50 60,50 55,65 45,65" fill="#475569" />
+                    <!-- 生存防護服 -->
+                    <path d="M 28 78 L 72 78 L 75 95 L 25 95 Z" fill="#334155"/>
+                </svg>
+            `
+        };
+
+        // === 2. 遊戲完整劇本資料樹 (基於草稿全面故事化) ===
+        const GameData = {
+            setup: {
+                title: "初始化：登錄漫遊者數據協定",
+                progress: "BOOT-UP",
+                badge: "<i class='fa-solid fa-terminal mr-1.5'></i> 時空協定終端",
+                avatar: "ruiting_m",
+                charName: "瑞廷",
+                charTitle: "未連線 / 漫遊者",
+                speech: "「請登錄您的漫遊者身分檔案，以啟動時空重組傳送器。」",
+                power: 100,
+                carbon: 350,
+                bg_picture: 'https://i.postimg.cc/j2Hj97s5/Firefly-Extreme-summer-heat-in-a-modern-city-year-2026-2-PM-blazing-sun-like-a-furnace-as-538731.jpg',
+                text: `歡迎使用<b>「電力重組的漫遊者：多維模擬終端」</b>。<br/><br/>
+本劇本已依據 <b>2026 能源危機草稿</b> 進行全面小說化調整。您將扮演瑞廷，透過每一次的關鍵態度與行動選擇，親自推動並見證人類在西元 3000 年的命運發展。<br/><br/>
+請先在右側面板<b>輸入您的自訂姓名</b>與<b>生理性別特徵</b>（這會實時重組您的終端視覺成像）。準備就緒後，請點擊「登錄系統」啟動協定！`
+            },
+            prologue: {
+                title: "序章：2026年夏天的警鐘",
+                progress: "STEP 01/04",
+                badge: "<i class='fa-solid fa-clock mr-1.5'></i> 2026 年夏季 · 現實世界",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷",
+                charTitle: "當代青年 / 主角",
+                speech: "「這股悶熱……難道只是危機爆發前的片刻安寧？」",
+                power: 100,
+                carbon: 350,
+                bg_picture: 'https://i.postimg.cc/L5bCksW4/Firefly-Cinematic-movie-poster-style-A-teenage-protagonist-shown-only-from-behind-(Strong-ba-500526.jpg',
+                text: `西元 2026 年盛大酷暑的下午 2 點。正午的太陽像一個巨大的熔爐，無情地烘烤著都市的每個角落。熱浪在滾燙的柏油路上蒸騰出扭曲的光影，空氣沉悶得令人窒息。<br/><br/>
+你——<b>瑞廷</b>，與朋友們剛剛結束了熱鬧的戶外聚會，身上的排汗衫早已被汗水浸透。大家一邊擦著汗，一邊喧鬧著推開了夏莉家的大門。迎面而來的悶熱讓大家忍不住發出哀怨的嘆息：<b>「瑞廷，快點！救命啊！快把冷氣打開！」</b><br/><br/>
+朋友們一疊聲地催促著，直接癱倒在客廳的沙發上。你快步走向遙控器，按下開關。夏莉家那台強效冷氣發出了低沉的運轉聲，隨後，一陣陣冰涼、爽俐的冷氣源源不絕地吹出，撫平了皮膚上的燥熱。大家滿足地閉上眼，享受著這救贖般的涼意。<br/><br/>
+此時，你的手機劇烈震動。解鎖螢幕後，一則突發新聞速報赫然跳出：<br/>
+<span class="text-red-400 font-bold">《國家電力限入紅色警戒！全球極端氣候加劇，各國電力資源群起告急，全球能源不足！面對電力資源不足，我們必須正視這個即將耗盡的電能問題……》</span><br/><br/>
+新聞主播焦急的聲音彷彿在客廳迴盪。你看著手中握著的遙控器，又看著正沉浸在舒適冷氣中的朋友們。你內心深處突然升起一股強烈的預感——此時此刻你的每一個細微態度，都將成為推動人類命運發展的骨牌。面對這份能源警鐘，你決定帶領大家走向何方？`,
+                choices: [
+                    { text: "走向低能耗的小步履：「既然能源不足，我們就不能盲目地揮霍，必須從學會克制慾望開始。」", next: "tier1_A", score: { p: 100, c: 350 } },
+                    { text: "尋求科技突破的開拓者：「光靠被動的省電治標不治本！我們要主動尋找更多、更有效率的發電方法！」", next: "tier1_B", score: { p: 95, c: 360 } },
+                    { text: "今朝有酒的放任享樂：「現在外面頂著快40度的高溫，不吹冷氣簡真是要人命。反正現在有得用就好！」", next: "tier1_C", score: { p: 80, c: 420 } }
+                ]
+            },
+            
+            // 階層 1 - A 分支
+            tier1_A: {
+                title: "第一階層：走向低能耗的小步履",
+                progress: "STEP 02/04",
+                badge: "<i class='fa-solid fa-leaf mr-1.5'></i> 2026 年秋季 · 社區節能期",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷",
+                charTitle: "社區環保倡議者",
+                speech: "「懂得節制的人，才能擁有長遠的舒適。」",
+                power: 100,
+                carbon: 350,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `看著手機上的紅色警報，你的眉頭漸漸緊鎖。你無法忽視主播提到的「全球能源不足」。你深吸了一口氣，轉過身對沙發上的朋友們說：<br/>
+<b>「大家聽我說，外面的電網已經快撐不住了。我們享受舒適的同時，也得稍微正視這個問題。既然能源不足，我們就不能盲目地揮霍，必須從學會克制慾望開始。」</b><br/><br/>
+朋友們面面相覷，原本吵鬧的客廳安靜了下來。夏莉坐直了身體，點了點頭：「瑞廷說得對，如果大家都不管，到時候一起跳電就糟了。」<br/><br/>
+在你的引導下，這個小小的客廳開始建立起對電力的敬畏之心。然而，隨著這份克制的心態逐漸在你的心中發酵，甚至影響了你未來的職涯與社會運動方向時，這份「節能理念」開始面臨了兩種截然不同的實踐道路。請選擇你接下來的具體行動：`,
+                choices: [
+                    { text: "適度理性的克制節能：提倡平常不用太多電，不需要用的時候全部關掉。", next: "action_1_1", score: { p: 90, c: 350 } },
+                    { text: "極端偏激的反科技苦行：走向完全不用電的極端，就算身體再不舒服也堅決拒絕文明。", next: "action_1_2", score: { p: 40, c: 300 } }
+                ]
+            },
+
+            // 階層 1 - B 分支
+            tier1_B: {
+                title: "第一階層：尋求科技突破的開拓者",
+                progress: "STEP 02/04",
+                badge: "<i class='fa-solid fa-atom mr-1.5'></i> 2045 年 · 能源研究院總控室",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷 (首席科學家)",
+                charTitle: "頂尖能源研究所 / 決策者",
+                speech: "「守護環境不等於倒退，科技是為了解決問題而生的！」",
+                power: 95,
+                carbon: 360,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `你看著手裡的冷氣遙控器，內心燃起了一股不服輸的工程師靈魂。你轉頭對朋友們大聲宣示：<br/>
+<b>「光靠被動的省電只是治標不治本，人類的文明不可能永遠在縮衣節食中進步。源頭的電力不足，才是我們必須直面的核心。我們要正視這個問題，但解決的手段不是逃避，而是去主動尋找更多、更有效率的發電方法！」</b><br/><br/>
+這番話讓朋友們眼裡閃爍出希望的光芒。你說到做到，在接下來的大學生涯中，你毅然決然投入了能源工程學系，並在畢業後進入了國家頂尖的能源研究院。你誓言要用科技重組未來的電力版圖。<br/><br/>
+歲月更迭，你已成為掌握國家能源政策方向的首席科學家。此時，面對全球財閥的施壓與開發時效的急迫性，你必須在研究院的總控室裡，簽下決定性的能源路線技術發展書。請選擇你接下來的具體行動：`,
+                choices: [
+                    { text: "全心投入再生綠能技術：堅持環境正義，使用再生能源（綠能）來發電，即便初期成本高昂、進展緩慢。", next: "action_2_1", score: { p: 150, c: 320 } },
+                    { text: "向財閥妥協的非再生能源：追求短期高暴利與快速見效，使用非再生能源發電（重開燃煤與擴建核能）。", next: "action_2_2", score: { p: 70, c: 550 } }
+                ]
+            },
+
+            // 階層 1 - C 分支
+            tier1_C: {
+                title: "第一階層：今朝有酒的放任享樂",
+                progress: "STEP 02/04",
+                badge: "<i class='fa-solid fa-city mr-1.5'></i> 2048 年 · 商業帝國總部",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷 (零售大亨)",
+                charTitle: "巨型商業集團 / 總裁",
+                speech: "「什麼環保、永續？那不過是阻礙商業增長的絆腳石罷了。」",
+                power: 80,
+                carbon: 420,
+                text: `你嗤笑了一聲，隨手將手機扣在桌上。<b>「未來的事留給未來的人去煩惱吧！」</b>你大聲對朋友們說：<b>「現在外面頂著快40度的高溫，不吹冷氣簡直是要人命。不關我的事，反正現在有得用就好。只要我這一代能爽到，管他後面洪水滔天！」</b><br/><br/>
+聽到你這麼說，原本有些愧疚的朋友們也紛紛放開了束縛。「沒錯！瑞廷說得對，反正我們不吹，別人也在吹啊！」客廳裡的氣氛再度高漲。<br/><br/>
+這種「及時行樂、放任不管」 Attitude，像一場無設防的瘟疫，悄悄腐蝕了你與你身邊所有人的價值觀。隨著年歲增長，你憑藉狠辣的商業手段進入商界，創辦了龐大的全天候娛樂與零售帝國。<br/><br/>
+在你的主導與對環境的不屑一顧下，你的生活與商業帝國開始走向了無節制的瘋狂擴張。此時，面對商場營運方針，你必須簽署下一步決策。請選擇你接下來的具體行動：`,
+                choices: [
+                    { text: "隨時隨地的「不夜城開滿」：認為享樂至上，隨時隨地把所有時間、霓虹招牌與電器設備都開滿。", next: "action_3_1", score: { p: 20, c: 680 } },
+                    { text: "極致揮霍的「全電器最大」：毫無底線，在任何場合都把所有電器的功率與壓縮機消耗開到最大、嘲笑綠色運動。", next: "action_3_2", score: { p: 10, c: 800 } }
+                ]
+            },
+
+            // 具體行動故事節點 1-1
+            action_1_1: {
+                title: "行動 1-1：理性的微光",
+                progress: "STEP 03/04",
+                badge: "<i class='fa-solid fa-lightbulb mr-1.5'></i> 2026 ~ 2050 年 · 實踐期",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷",
+                charTitle: "適度用電聯盟發起人",
+                speech: "「小小的習慣累積起來，就是拯救地球的浩瀚微光。」",
+                power: 90,
+                carbon: 350,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `你決定從夏莉家的客廳做起。你把冷氣溫度調高到舒適且省電的 26 度，並順手關掉了空無一人的走廊燈與浴室排風扇。<br/><br/>
+以此為起點，你後來將這種「減法生活」編寫成社區公約，創立了非營利組織「適度用電聯盟」。<br/><br/>
+這股理性的微光在隨後的幾百年間開枝散葉，讓人類逐漸學會了克制與珍惜，將節能化為呼吸般自然的基因……<br/><br/>
+<b>【傳送指令已就緒】</b><br/>
+現在，時空重組傳送器能量已蓄滿，準備躍遷至西元 3000 年，檢驗你這項抉擇產生的長遠歷史結果。`,
+                choices: [
+                    { text: "⚡ 啟動時空重組傳送器，躍遷至西元 3000 年！", next: "ending_1_1", score: { p: 90, c: 350 } }
+                ]
+            },
+
+            // 具體行動故事節點 1-2
+            action_1_2: {
+                title: "行動 1-2：苦行的陰霾",
+                progress: "STEP 03/04",
+                badge: "<i class='fa-solid fa-ban mr-1.5'></i> 2026 ~ 2050 年 · 盲從期",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷",
+                charTitle: "反科技教派領袖",
+                speech: "「科技是毒藥，文明是陷阱，我們必須將它們徹底摧毀！」",
+                power: 40,
+                carbon: 300,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `你的理念走向了偏激的極端。當天在夏莉家，你直接一臉狂熱地強行拔掉了客廳的總電源，導致朋友們在高溫下集體中暑送醫。<br/><br/>
+隨後，你建立了一個帶有宗教色彩、極端的反科技組織，瘋狂宣傳「電力是惡魔的誘惑」。你帶領信徒砸毀電網、燒毀發電廠，鼓吹人類應該徹底拒絕文明，回歸絕對的原始。<br/><br/>
+這場盲目的反電苦行，最終在全球引發了連鎖恐慌，導致科技文明開始集體大倒退……<br/><br/>
+<b>【傳送指令已就緒】</b><br/>
+時空亂流正在狂飆，準備躍遷至西元 3000 年，看看極端盲信對人類文明造成的慘痛終局。`,
+                choices: [
+                    { text: "⚡ 啟動時空重組傳送器，躍遷至西元 3000 年！", next: "ending_1_2", score: { p: 0, c: 300 } }
+                ]
+            },
+
+            // 具體行動故事節點 2-1
+            action_2_1: {
+                title: "行動 2-1：綠能的翅膀",
+                progress: "STEP 03/04",
+                badge: "<i class='fa-solid fa-wind mr-1.5'></i> 2045 ~ 2080 年 · 再生革命",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷 (首席科學家)",
+                charTitle: "頂尖能源研究所 / 決策者",
+                speech: "「環境正義是不容妥協的，人類的未來必須在乾淨的陽光下閃耀！」",
+                power: 150,
+                carbon: 320,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `身為首席科學家的你，展現了無與倫比的骨氣。你斷然拒絕了所有污染性燃料財閥的巨額資助，將研究院的所有資源與預算，孤注一擲地投入到「再生能源」與「超高效蓄電」的研發中。<br/><br/>
+你率領團隊克服了太陽能轉換率的物理瓶頸，並在深海部署了巨大的潮汐動力矩陣。你頂住了社會初期對「發電效率不足」的質疑，成功讓無污染的再生綠能徹底取代了傳統碳排電網，為人類文明插上了綠色的科技翅膀！<br/><br/>
+<b>【傳送指令已就緒】</b><br/>
+時空隧道正綻放翡翠綠的光譜，準備躍遷至西元 3000 年，見證這項科技與生態共融的奇蹟。`,
+                choices: [
+                    { text: "⚡ 啟動時空重組傳送器，躍遷至西元 3000 年！", next: "ending_2_1", score: { p: 150, c: 320 } }
+                ]
+            },
+
+            // 具體行動故事節點 2-2
+            action_2_2: {
+                title: "行動 2-2：短視的誘惑",
+                progress: "STEP 03/04",
+                badge: "<i class='fa-solid fa-smog mr-1.5'></i> 2045 ~ 2080 年 · 工業狂熱",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷 (首席科學家)",
+                charTitle: "頂尖能源研究所 / 決策者",
+                speech: "「先活過今天，才有資格談明天！重啟燃煤，這是最現實的選擇。」",
+                power: 70,
+                carbon: 550,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `面對全球電網即將崩潰的巨大壓力，以及開發時效的緊迫性，你最終動搖了。你向跨國化石燃料財閥妥協，在技術決策書上簽字。<br/><br/>
+你選擇了見效最快、成本最低的「非再生能源」路線——重啟大量的加倍燃煤發電廠，並在沿海興建了不安全的新型核能巨獸。<br/><br/>
+在接下來的幾十年裡，全球確實迎來了虛假的電力爆滿狂歡，商業巨頭們賺得盆滿缽滿。但與此同時，無數的溫室氣體與無法處理的核廢料，也如同定時炸彈般被深埋進地球的溫床……<br/><br/>
+<b>【傳送指令已就緒】</b><br/>
+四周的空氣開始變得滾燙刺鼻，傳送器開始尖叫。準備躍遷至西元 3000 年，面對短視所埋下的惡果。`,
+                choices: [
+                    { text: "⚡ 啟動時空重組傳送器，躍遷至西元 3000 年！", next: "ending_2_2", score: { p: 30, c: 680 } }
+                ]
+            },
+
+            // 具體行動故事節點 3-1
+            action_3_1: {
+                title: "行動 3-1：不夜城的狂歡",
+                progress: "STEP 03/04",
+                badge: "<i class='fa-solid fa-moon mr-1.5'></i> 2048 ~ 2090 年 · 繁華盛世",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷 (零售大亨)",
+                charTitle: "巨型商業集團 / 總裁",
+                speech: "「燈火不熄，享樂不停！這才是人類文明發展的極致展現！」",
+                power: 20,
+                carbon: 680,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `你登上了財富的頂峰，在全世界範圍內發起了龐大的「不夜城計畫」。你認為及時行樂最重要，隨時隨地都要把所有時間與電器設備都開滿。<br/><br/>
+在你的金錢帝國帶領下，辦公大樓的霓虹燈 24 小時徹夜通明，無人的高檔賣場冷氣整夜狂吹，家家戶戶的電器從不關機，以彰顯尊貴的生活品質。<br/><br/>
+全人類陷入了一場對地球資源進行敲骨吸髓式的瘋狂宿醉，全球電能消耗呈現指數型暴增，卻沒有人在乎發電機組在黑煙中的絕望哀鳴……<br/><br/>
+<b>【傳送指令已就緒】</b><br/>
+時空隧道中傳來陣陣玻璃碎裂與警報聲。時空傳送器即將因能量不穩而熄滅，準備躍遷至西元 3000 年。`,
+                choices: [
+                    { text: "⚡ 啟動時空重組傳送器，躍遷至西元 3000 年！", next: "ending_3_1", score: { p: 0, c: 500 } }
+                ]
+            },
+
+            // 具體行動故事節點 3-2
+            action_3_2: {
+                title: "行動 3-2：揮揮的饗宴",
+                progress: "STEP 03/04",
+                badge: "<i class='fa-solid fa-triangle-exclamation mr-1.5'></i> 2048 ~ 2100 年 · 毀滅前夕",
+                avatar: "ruiting_avatar_placeholder",
+                charName: "瑞廷 (零售大亨)",
+                charTitle: "巨型商業集團 / 總裁",
+                speech: "「管他什麼節約！把一切都給我開到最大，這才是真正的自由！」",
+                power: 10,
+                carbon: 800,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `你將「放縱」推向了毀滅的頂峰。當天在夏莉家，你不僅把冷氣開到極致的 16 度，還同時將除濕機、多台電熱水器、微波爐全部同時啟動超載運運，並在社群媒體上大肆嘲弄、打壓節約資源的環保人士。<br/><br/>
+你掌權後，倡導「超限度物質享受」，推動全球工業與民生用電毫無底線地「開到最大」。無數的超級工廠瘋狂排放著致命熱浪，家用電器極限超載，人類在最後的揮霍饗宴中醉生夢死，完全忽視地球發出的痛苦呻吟……<br/><br/>
+<b>【傳送指令已就緒】</b><br/>
+心臟劇烈震碎的地鳴聲響起，時空隧道正崩塌。慘叫著跌入西元 3000 年的現實吧。`,
+                choices: [
+                    { text: "⚡ 啟動時空重組傳送器，躍遷至西元 3000 年！", next: "ending_3_2", score: { p: 10, c: 850 } }
+                ]
+            },
+
+            // 結局：Ending 1_1
+            ending_1_1: {
+                title: "西元3000年結局：永續平衡的新世界",
+                progress: "STEP 04/04",
+                badge: "<i class='fa-solid fa-seedling mr-1.5'></i> 西元 3000 年 · 永續綠能都市",
+                avatar: "ally_navigator",
+                charName: "艾莉 (Ally)",
+                charTitle: "綠色城市導航員",
+                speech: "「歡迎來到永續新世紀，漫遊者。這天空，如你所望的蔚藍。」",
+                power: 90,
+                carbon: 350,
+                text: `<b>【3000年世界現況】</b><br/>
+這裡的天空是一片澄澈的蔚藍，白雲下是與都市完美融合的森林。因為千年前瑞廷（你）在 2026 年夏天掀起的理性節能與「適度用電聯盟」運動，西元 3000 年的地球，資源始終維持在良好、平衡的狀態。<br/><br/>
+人類的生活或許不是歷史上最奢侈、最科幻的，但每個人天天用電都不多不少，生活舒服。科技在安全的界線內進步，同時不對地球生態造成任何危害。<br/><br/>
+<b>這是一個擺脫了能源匱乏與極端氣候陰影，與大自然達成完美動態平衡的永續新紀元。</b>`
+            },
+
+            // 結局：Ending 1_2
+            ending_1_2: {
+                title: "西元3000年結局：倒退文明的原始紀元",
+                progress: "STEP 04/04",
+                badge: "<i class='fa-solid fa-person-hunting mr-1.5'></i> 西元 3000 年 · 科技倒退冰河期",
+                avatar: "primitive",
+                charName: "卡魯 (Kalu)",
+                charTitle: "新原始人類",
+                speech: "「電……是什麼？那是神靈降下天罰的火焰嗎？」",
+                power: 0,
+                carbon: 300,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `<b>【3000年世界現況】</b><br/>
+這裡沒有霓虹燈，也沒有任何鋼筋水泥的痕跡。因為極端偏激的反電思想在千年間演變成了神聖不可侵犯的宗教鐵律，人類科技徹底停滯並發生了大崩壞。<br/><br/>
+如果生活完全不用電，生活就會變得極度不方便。西元 3000 年的地球，人類已退化到了住在鑽木取火的洞穴與粗糙草屋的野蠻時代。<br/><br/>
+<b>由於缺乏現代科技帶來的醫療、農業與防禦天災的能力，人類的平均壽命縮短至 30 歲，脆弱無力。這是一個因噎廢食、文明自我閹割的悲慘結局。</b>`
+            },
+
+            // 結局：Ending 2_1
+            ending_2_1: {
+                title: "西元3000年結局：科技與生態的綠能極致",
+                progress: "STEP 04/04",
+                badge: "<i class='fa-solid fa-wand-magic-sparkles mr-1.5'></i> 西元 3000 年 · 生態超科技都市",
+                avatar: "scientist",
+                charName: "戴維斯 (Davis)",
+                charTitle: "未來首席物理學家",
+                speech: "「乾淨的能源如星光般取之不盡。這就是科技與生態共融的奇蹟。」",
+                power: 150,
+                carbon: 320,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `<b>【3000年世界現況】</b><br/>
+這是一個令人屏息的科幻奇蹟！林立的摩天巨塔外牆覆蓋著高科技的仿生葉綠素，能自動將陽光與風能轉化為無盡的電力。浮空飛車在空中井然有序地穿梭，地面則是繁茂的熱帶雨林與清澈的溪流。<br/><br/>
+千年前瑞廷（你）在再生能源發展書上的簽署與無畏堅持，讓西元 3000 年的地球資源永遠明亮、源源不絕。人類過著高度發達、非常舒服的日子，而且科技對地球毫無危害。<br/><br/>
+<b>科技與大自然在此處達成了最完美的科技共生，人類文明傲然屹立於宇宙星河之中。</b>`
+            },
+
+            // 結局：Ending 2_2
+            ending_2_2: {
+                title: "西元3000年結局：溫室效應的極端煉獄",
+                progress: "STEP 04/04",
+                badge: "<i class='fa-solid fa-circle-exclamation mr-1.5'></i> 西元 3000 年 · 蒼穹防護罩都市",
+                avatar: "soldier",
+                charName: "哨兵巴特 (Bart)",
+                charTitle: "穹頂城防衛兵",
+                speech: "「千萬別摘下氧氣面罩！外面的酸雨能溶化鋼鐵！」",
+                power: 30,
+                carbon: 680,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `<b>【3000年世界現況】</b><br/>
+抬頭望去，天空是一片令人作嘔的死灰色，毒霧與黃色硫磺長年籠罩地表。由於千年間非再生能源的瘋狂開採與極致燃燒，地球被嚴重的重金屬與溫室氣體污染，全球暖化越來越嚴重。<br/><br/>
+兩極冰山早已融化殆盡，暴漲的海平面淹沒了絕大多數陸地。僅存的人類只能像老鼠一樣擠在密閉的、依靠人工過濾氧氣的防護罩都市裡。<br/><br/>
+<b>防護罩外是動輒攝氏 55 度以上的極端高溫暴曬，地表生態系統徹底失衡，化為一片焦黑荒蕪的煉獄。這是短視近利、出賣未來的恐怖苦果。</b>`
+            },
+
+            // 結局：Ending 3_1
+            ending_3_1: {
+                title: "西元3000年結局：資源枯竭的世界末日",
+                progress: "STEP 04/04",
+                badge: "<i class='fa-solid fa-ghost mr-1.5'></i> 西元 3000 年 · 永夜死寂之城",
+                avatar: "recorder",
+                charName: "編年史官",
+                charTitle: "永夜的編年史紀錄者",
+                speech: "「貪婪抽乾了最後一滴石油，這是一場永久的熄燈儀式。」",
+                power: 0,
+                carbon: 500,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `<b>【3000年世界現況】</b><br/>
+世界完全毀滅。這是一個沒有一絲光芒、也沒有任何生命波動的死寂地球。千年前人類盲目尊崇、由你推動的「不夜城、開滿主義」，在短短數百年間就將地球幾十億年累積的化石能源與可發電資源徹底抽乾。<br/><br/>
+當全球最後一根燃料棒、最後一滴石油被榨乾後，世界迎來了永久的大停電。沒有科技、沒有生產力，所有文明在黑暗中土崩瓦解。<br/><br/>
+<b>世界完全毀滅，只剩下萬劫不復的斷垣殘壁與無盡的冰冷風沙，在宇宙中默默地流下最後一滴眼淚。</b>`
+            },
+
+            // 結局：Ending 3_2
+            ending_3_2: {
+                title: "西元3000年結局：地殼熔毀與生態滅絕",
+                progress: "STEP 04/04",
+                badge: "<i class='fa-solid fa-skull-crossbones mr-1.5'></i> 西元 3000 年 · 氣候崩潰廢土",
+                avatar: "survivor",
+                charName: "倖存者 09",
+                charTitle: "末代輻射倖存者",
+                speech: "「陽光是致命的射線，我們連呼吸都需要付出尊嚴的代價。」",
+                power: 10,
+                carbon: 850,
+                bg_picture: 'https://i.postimg.cc/q7HQ8fNy/Firefly-zhe-li-de-tian-kong-shi-yi-pian-cheng-che-de-wei-lan-bai-yun-xia-shi-yu-dou-shi-wan-mei-rong-he-de-sen-lin-yin-wei-qian-nian-qian-rui-ting-xian-qi-de-li-xing-jie-neng-yun-dong-xi-yuan3000nian-de-de-qiu-zi-yuan-kai-shi-shi-zhong-wei-chi-zai-liang-hao-ping-heng-de-zhuang-tai-ren-lei-de-sheng-huo-huo-xu-bu-shi-li-538731.jpg',
+                text: `<b>【3000年世界現況】</b><br/>
+這顆星球已經不能被稱為地球，而是一顆活生生的人間地獄。超限度用電引發了全球氣候的大崩潰，溫室效應失控，導致臭氧層破洞擴大到無可挽救的地步，致命的太陽宇宙射線與劇烈輻射直射地表。<br/><br/>
+海平面淹沒了舊文明，極端劇烈日夜溫差高達上百度，人類無處可躲，根本無法適應。更可怕的是，隨著環境的極端惡化，人類的身體也跟著變得越來越脆弱，連基本的免疫力與繁衍能力都喪失殆盡，新生兒的夭折率是百分之百。<br/><br/>
+<b>人類這個物種，正迎來生理機能上的徹底滅絕，與生態系統的終極死亡。這是極度揮霍、無視呻吟的終極末日。</b>`
+            }
+        };
+
+        // === 3. 遊戲核心狀態管理 ===
+        let gameState = {
+            currentStep: 'setup',
+            history: [],
+            gridPower: 100,
+            carbonIndex: 350,
+            userName: "瑞廷",
+            userGender: "m", // 'm', 'f', 'nb'
+            playerReflection: "",
+            path: [] // 記錄選擇路徑
+        };
+
+        // === 4. 動態粒子背景系統 (基於碳排指標變色與流速調整) ===
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        const sceneBackground = document.getElementById("sceneBackground");
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height + canvas.height; 
+                this.size = Math.random() * 3 + 1;
+                this.speedY = -(Math.random() * 1.5 + 0.5);
+                this.speedX = Math.random() * 1 - 0.5;
+                this.alpha = Math.random() * 0.5 + 0.1;
+                
+                if (gameState.carbonIndex <= 350) {
+                    // 低碳排放：乾淨的翡翠綠與深海藍粒子
+                    this.color = Math.random() > 0.5 ? '16, 185, 129' : '59, 130, 246';
+                } else if (gameState.carbonIndex <= 550) {
+                    // 中度碳排放：警告橘黃色粒子
+                    this.color = '245, 158, 11';
+                } else {
+                    // 極重碳排污染：狂暴大顆的紅色/死灰色粒子
+                    this.color = Math.random() > 0.3 ? '239, 68, 68' : '107, 114, 128';
+                    this.size = Math.random() * 6 + 2; 
+                    this.speedY = -(Math.random() * 0.8 + 0.2); 
+                }
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.alpha -= 0.002;
+                if (this.alpha <= 0 || this.y < 0) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = `rgb(${this.color})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(Math.floor(canvas.width / 15), 80);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+        
+        function updateSceneBackground(scene) {
+            if (!scene || !scene.bg_picture) return;
+
+            sceneBackground.style.backgroundImage = `url('${scene.bg_picture}')`;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // === 5. 姓名與性別實時連動 (Setup) ===
+        const nameInput = document.getElementById('playerNameInput');
+        nameInput.addEventListener('input', (e) => {
+            let val = e.target.value.trim();
+            if(!val) val = "漫遊者";
+            gameState.userName = val;
+            
+            // 實時更新頭像下方的名牌
+            document.getElementById('charName').innerText = val;
+        });
+
+        function selectGender(gender) {
+            gameState.userGender = gender;
+            
+            // 更換選取按鈕的發光樣式
+            const btnM = document.getElementById('genderBtn_m');
+            const btnF = document.getElementById('genderBtn_f');
+            const btnNB = document.getElementById('genderBtn_nb');
+
+            const inactiveClass = "border-gray-800 bg-gray-950/40 text-gray-400 hover:border-gray-700 shadow-none";
+            const activeMClass = "border-violet-500 bg-violet-950/20 text-violet-300 shadow-md";
+            const activeFClass = "border-pink-500 bg-pink-950/20 text-pink-300 shadow-md";
+            const activeNBClass = "border-blue-500 bg-blue-950/20 text-blue-300 shadow-md";
+
+            btnM.className = `py-2.5 rounded-xl border font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${gender === 'm' ? activeMClass : inactiveClass}`;
+            btnF.className = `py-2.5 rounded-xl border font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${gender === 'f' ? activeFClass : inactiveClass}`;
+            btnNB.className = `py-2.5 rounded-xl border font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${gender === 'nb' ? activeNBClass : inactiveClass}`;
+
+            // 動態更換左側預覽立繪與發光底座
+            const avatarKey = `ruiting_${gender}`;
+            document.getElementById('avatarContainer').innerHTML = CharacterAvatars[avatarKey];
+
+            const glow = document.getElementById('avatarGlow');
+            if (gender === 'm') {
+                glow.className = "absolute inset-0 rounded-full bg-violet-600/15 filter blur-xl transition-all duration-1000 animate-pulse-slow";
+            } else if (gender === 'f') {
+                glow.className = "absolute inset-0 rounded-full bg-pink-600/15 filter blur-xl transition-all duration-1000 animate-pulse-slow";
+            } else {
+                glow.className = "absolute inset-0 rounded-full bg-blue-600/15 filter blur-xl transition-all duration-1000 animate-pulse-slow";
+            }
+        }
+
+        // 開始正式進入遊戲
+        function startGame() {
+            let val = nameInput.value.trim();
+            if (!val) {
+                showFloatingMsg("💡 請輸入一個有型的姓名再登錄系統！");
+                return;
+            }
+            gameState.userName = val;
+            
+            // 隱藏登錄控制面板，切換到序章
+            document.getElementById('setupGroup').classList.add('hidden');
+            
+            triggerTimeTravelWarp(() => {
+                renderScene('prologue');
+            });
+        }
+
+        // === 6. UI 渲染與狀態同步更新 ===
+        function updateStatusBars(targetPower, targetCarbon) {
+            gameState.gridPower = targetPower;
+            gameState.carbonIndex = targetCarbon;
+
+            const powerText = document.getElementById('powerText');
+            const powerBar = document.getElementById('powerBar');
+            const powerIcon = document.getElementById('powerIcon');
+            const carbonText = document.getElementById('carbonText');
+            const carbonBar = document.getElementById('carbonBar');
+            const carbonIcon = document.getElementById('carbonIcon');
+
+            // 更新電網
+            powerText.innerText = `${targetPower}%`;
+            powerBar.style.width = `${Math.min(targetPower, 100)}%`;
+            if (targetPower >= 80) {
+                powerText.className = "text-sm sm:text-base font-extrabold text-emerald-400";
+                powerBar.className = "bg-emerald-500 h-full rounded-full transition-all duration-700";
+                powerIcon.className = "fa-solid fa-battery-three-quarters text-emerald-400 text-lg sm:text-xl";
+            } else if (targetPower >= 30) {
+                powerText.className = "text-sm sm:text-base font-extrabold text-yellow-400";
+                powerBar.className = "bg-yellow-500 h-full rounded-full transition-all duration-700";
+                powerIcon.className = "fa-solid fa-battery-half text-yellow-400 text-lg sm:text-xl animate-pulse";
+            } else {
+                powerText.className = "text-sm sm:text-base font-extrabold text-red-500 animate-pulse";
+                powerBar.className = "bg-red-600 h-full rounded-full transition-all duration-700";
+                powerIcon.className = "fa-solid fa-battery-empty text-red-500 text-lg sm:text-xl animate-bounce";
+            }
+
+            // 更新大氣碳排放
+            carbonText.innerText = `${targetCarbon} ppm`;
+            const carbonPercentage = Math.min(((targetCarbon - 300) / 700) * 100, 100);
+            carbonBar.style.width = `${carbonPercentage}%`;
+            if (targetCarbon <= 350) {
+                carbonText.className = "text-sm sm:text-base font-extrabold text-sky-400";
+                carbonBar.className = "bg-sky-500 h-full rounded-full transition-all duration-700";
+                carbonIcon.className = "fa-solid fa-smog text-sky-400 text-lg sm:text-xl";
+            } else if (targetCarbon <= 550) {
+                carbonText.className = "text-sm sm:text-base font-extrabold text-amber-400";
+                carbonBar.className = "bg-amber-500 h-full rounded-full transition-all duration-700";
+                carbonIcon.className = "fa-solid fa-smog text-amber-400 text-lg sm:text-xl";
+            } else {
+                carbonText.className = "text-sm sm:text-base font-extrabold text-red-500 animate-pulse";
+                carbonBar.className = "bg-red-600 h-full rounded-full transition-all duration-700";
+                carbonIcon.className = "fa-solid fa-cloud-showers-water text-red-500 text-lg sm:text-xl animate-bounce";
+            }
+
+            initParticles();
+        }
+
+        // 打字機效果 (包含自訂名字動態解析，自動將原劇本的「瑞廷」替換成玩家自訂的 userName)
+        function typeWriter(text, containerId, speed = 4) {
+            const formattedText = text.replace(/瑞廷/g, `<b class="text-violet-300 font-extrabold">${gameState.userName}</b>`);
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            let i = 0;
+            let isTag = false;
+            let currentText = "";
+
+            function type() {
+                if (i < formattedText.length) {
+                    let char = formattedText.charAt(i);
+                    if (char === '<') isTag = true;
+                    currentText += char;
+                    if (char === '>') isTag = false;
+                    
+                    if (!isTag) {
+                        container.innerHTML = currentText;
+                    }
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    container.innerHTML = formattedText;
+                }
+            }
+            type();
+        }
+
+        // === 7. 核心劇情跳轉與選擇執行 ===
+        function renderScene(stepKey) {
+            gameState.currentStep = stepKey;
+            const scene = GameData[stepKey];
+
+            // 1. 更新進度、年份與狀態欄數值
+            document.getElementById('chapterTitle').innerText = scene.title;
+            document.getElementById('stepProgress').innerText = scene.progress;
+            
+            const badge = document.getElementById('timelineBadge');
+            badge.innerHTML = scene.badge;
+            
+            if (stepKey === 'setup') {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 tracking-wider";
+            } else if (stepKey.startsWith('ending_')) {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 tracking-wider";
+            } else if (stepKey.startsWith('tier1_')) {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 tracking-wider";
+            } else {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 tracking-wider";
+            }
+            
+            updateSceneBackground(scene);
+            updateStatusBars(scene.power, scene.carbon);
+
+            // 2. 決定動態角色立繪
+            let charNameRender = scene.charName.replace(/瑞廷/g, gameState.userName);
+            document.getElementById('charName').innerText = charNameRender;
+            document.getElementById('charTitle').innerText = scene.charTitle;
+            document.getElementById('charSpeech').innerText = scene.speech.replace(/瑞廷/g, gameState.userName);
+            
+
+            // 處理頭像
+            let avatarKey = scene.avatar;
+            if (avatarKey === 'ruiting_avatar_placeholder') {
+                avatarKey = `ruiting_${gameState.userGender}`;
+            }
+            document.getElementById('avatarContainer').innerHTML = CharacterAvatars[avatarKey] || CharacterAvatars['ruiting_m'];
+
+            // 變更發光環色調
+            const glow = document.getElementById('avatarGlow');
+            if (stepKey === 'setup') {
+                if (gameState.userGender === 'm') glow.className = "absolute inset-0 rounded-full bg-violet-600/15 filter blur-xl transition-all duration-1000 animate-pulse-slow";
+                else if (gameState.userGender === 'f') glow.className = "absolute inset-0 rounded-full bg-pink-600/15 filter blur-xl transition-all duration-1000 animate-pulse-slow";
+                else glow.className = "absolute inset-0 rounded-full bg-blue-600/15 filter blur-xl transition-all duration-1000 animate-pulse-slow";
+            } else if (stepKey.startsWith('ending_1_1') || stepKey.startsWith('action_1_1') || stepKey.startsWith('tier1_A')) {
+                glow.className = "absolute inset-0 rounded-full bg-emerald-600/20 filter blur-xl animate-pulse-slow";
+            } else if (stepKey.startsWith('ending_2_1') || stepKey.startsWith('action_2_1') || stepKey.startsWith('tier1_B')) {
+                glow.className = "absolute inset-0 rounded-full bg-blue-600/20 filter blur-xl animate-pulse-slow";
+            } else if (stepKey.includes('_2') || stepKey.startsWith('tier1_C') || stepKey.startsWith('action_3_')) {
+                glow.className = "absolute inset-0 rounded-full bg-red-600/25 filter blur-xl animate-pulse-slow";
+            } else {
+                glow.className = "absolute inset-0 rounded-full bg-violet-600/20 filter blur-xl animate-pulse-slow";
+            }
+
+            // 3. 跑字機故事文本
+            typeWriter(scene.text, 'storyTextBox');
+
+            // 4. 清理並載入選項按鈕或功能區
+            const optionsGroup = document.getElementById('optionsGroup');
+            optionsGroup.innerHTML = "";
+
+            if (stepKey === 'setup') {
+                document.getElementById('actionPrompt').className = "text-xs font-semibold text-gray-400 mb-3 tracking-wide";
+                document.getElementById('actionPrompt').innerHTML = "<i class='fa-solid fa-terminal text-violet-400 mr-1.5'></i> 請在下方登錄：";
+                document.getElementById('setupGroup').classList.remove('hidden');
+                document.getElementById('reflectionGroup').classList.add('hidden');
+                document.getElementById('resetGroup').classList.add('hidden');
+            } else {
+                document.getElementById('setupGroup').classList.add('hidden');
+
+                if (scene.choices && scene.choices.length > 0) {
+                    document.getElementById('actionPrompt').className = "text-xs font-semibold text-gray-400 mb-3 tracking-wide";
+                    document.getElementById('actionPrompt').innerHTML = "<i class='fa-solid fa-angles-right text-violet-500 animate-pulse mr-1'></i> 請做出你的關鍵抉擇：";
+                    document.getElementById('reflectionGroup').classList.add('hidden');
+
+                    scene.choices.forEach((choice, index) => {
+                        const btn = document.createElement('button');
+                        let borderHoverClass = "hover:border-violet-500/80 hover:bg-violet-950/20 hover:text-violet-200 neon-shadow-blue";
+                        let letterBadge = 'A';
+                        if (index === 0) {
+                            borderHoverClass = "hover:border-emerald-500/80 hover:bg-emerald-950/15 hover:text-emerald-200 neon-shadow-green";
+                            letterBadge = 'A';
+                        } else if (index === 1) {
+                            borderHoverClass = "hover:border-amber-500/80 hover:bg-amber-950/15 hover:text-amber-200 neon-shadow-blue";
+                            letterBadge = 'B';
+                        } else if (index === 2) {
+                            borderHoverClass = "hover:border-red-500/80 hover:bg-red-950/15 hover:text-red-200 neon-shadow-red";
+                            letterBadge = 'C';
+                        }
+
+                        // 用於行動躍遷案件
+                        if (choice.text.startsWith("⚡")) {
+                            borderHoverClass = "border-violet-500 bg-violet-900/30 text-violet-300 font-bold hover:bg-violet-800/40 neon-shadow-purple text-center justify-center animate-pulse";
+                        }
+
+                        btn.className = `w-full text-left p-4 rounded-xl bg-gray-950/40 border border-gray-800/80 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 ${borderHoverClass} flex gap-3 items-start group`;
+                        
+                        if (choice.text.startsWith("⚡")) {
+                            btn.innerHTML = `
+                                <span class="w-full text-center text-xs sm:text-sm tracking-widest font-black uppercase">${choice.text}</span>
+                            `;
+                        } else {
+                            btn.innerHTML = `
+                                <span class="w-6 h-6 rounded-md bg-gray-800 text-gray-400 group-hover:bg-violet-500 group-hover:text-white flex items-center justify-center text-xs font-black transition-colors shrink-0">${letterBadge}</span>
+                                <span class="text-xs sm:text-sm font-medium leading-relaxed">${choice.text.replace(/瑞廷/g, gameState.userName)}</span>
+                            `;
+                        }
+                        
+                        btn.onclick = () => selectChoice(choice, letterBadge);
+                        optionsGroup.appendChild(btn);
+                    });
+                } else {
+                    setupReflectionStage();
+                }
+            }
+        }
+
+        // 選擇按鈕監聽
+        function selectChoice(choice, badgeLetter) {
+            gameState.path.push(badgeLetter);
+            
+            // 如果下一步是結局或行動點，看是否要進行時空躍遷
+            if (choice.next.startsWith('ending_')) {
+                triggerTimeTravelWarp(() => {
+                    renderScene(choice.next);
+                });
+            } else {
+                renderScene(choice.next);
+            }
+        }
+
+        // === 8. 時空躍遷傳送動畫 ===
+        function triggerTimeTravelWarp(onComplete) {
+            const gameWindow = document.getElementById('gameWindow');
+            
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black z-50 flex flex-col items-center justify-center overflow-hidden";
+            overlay.innerHTML = `
+                <div class="relative w-full h-full flex flex-col items-center justify-center">
+                    <div class="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-violet-600 via-indigo-600 to-fuchsia-600 opacity-60 filter blur-2xl animate-spin" style="animation-duration: 1.5s;"></div>
+                    <div class="absolute w-[300px] h-[300px] rounded-full bg-black z-10 border border-violet-500/50 flex flex-col items-center justify-center text-center p-6">
+                        <div class="text-xs font-mono text-violet-400 tracking-widest animate-pulse mb-2">TIMELINE DISRUPTION</div>
+                        <h3 class="text-xl font-black text-white tracking-widest uppercase mb-4 animate-bounce">
+                            <i class="fa-solid fa-hourglass-half text-fuchsia-500 mr-2"></i> 時空躍遷中
+                        </h3>
+                        <div class="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-violet-500 to-fuchsia-500 h-full rounded-full animate-pulse" style="width: 100%; transition: width 2.2s linear;"></div>
+                        </div>
+                        <p class="text-[9px] text-gray-500 font-mono mt-3">TARGET COORD: NEXT TIMELINE</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            gameWindow.classList.add('warp-active');
+            playTimeTravelSound();
+
+            setTimeout(() => {
+                overlay.remove();
+                gameWindow.classList.remove('warp-active');
+                onComplete();
+            }, 2200);
+        }
+
+        function playTimeTravelSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(80, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 2);
+                
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 2.2);
+            } catch (e) {
+                console.log("Audio API blocked or not supported.");
+            }
+        }
+
+        // === 9. 反思教育與結算 ===
+        function setupReflectionStage() {
+            document.getElementById('actionPrompt').className = "text-xs font-bold text-violet-400 mb-3 tracking-wide flex items-center gap-1";
+            document.getElementById('actionPrompt').innerHTML = "<i class='fa-solid fa-graduation-cap animate-bounce'></i> 【環境素養反思關卡】";
+            
+            document.getElementById('optionsGroup').innerHTML = `
+                <p class="text-xs text-gray-300 leading-relaxed bg-gray-950/50 border border-violet-500/20 p-4 rounded-xl mb-3">
+                    恭喜你體驗完了在西元 3000 年的命運。這款劇本的精髓在於讓我們正視 2026 年當下的能源與環境危機。<br/><br/>
+                    為了達成真正的通關，請思考並回答：<br/>
+                    <strong class="text-violet-300">👉 『如果你能讓 ${gameState.userName} 回到 2026 年，面對當下的酷暑，你認為人類應該如何在「當下的科技便利舒適」與「地球的永續環境保護」之間取得平衡？在你的日常生活中，你可以做出哪一個具體的改變？』</strong>
+                </p>
+            `;
+            document.getElementById('reflectionGroup').classList.remove('hidden');
+            document.getElementById('resetGroup').classList.remove('hidden');
+
+            document.getElementById('submitReflection').onclick = handleSubmitReflection;
+        }
+
+        function handleSubmitReflection() {
+            const val = document.getElementById('reflectionInput').value.trim();
+            if (!val || val.length < 10) {
+                showFloatingMsg("💡 反思字數太少囉！請認真撰寫至少 10 字以上的深刻想法，才能解鎖時空證書喔！");
+                return;
+            }
+
+            gameState.playerReflection = val;
+            generateCertificate();
+        }
+
+        function showFloatingMsg(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 border border-violet-500 px-6 py-3 rounded-full text-xs font-semibold text-violet-300 shadow-2xl z-50 animate-bounce";
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // === 10. 生成證書與 GM 評語 ===
+        function generateCertificate() {
+            document.getElementById('gameWindow').classList.add('hidden');
+            
+            const cert = document.getElementById('certificatePanel');
+            cert.classList.remove('hidden');
+
+            // 同步玩家自訂頭像到證書中
+            const playerAvatarKey = `ruiting_${gameState.userGender}`;
+            document.getElementById('certAvatarContainer').innerHTML = CharacterAvatars[playerAvatarKey] || CharacterAvatars['ruiting_m'];
+
+            // 1. 同步數據與名字
+            document.getElementById('certUserName').innerText = gameState.userName;
+            document.getElementById('certPower').innerText = `${gameState.gridPower}%`;
+            document.getElementById('certCarbon').innerText = `${gameState.carbonIndex} ppm`;
+
+            // 2. 評定稱號與回饋評語 (完全基於使用者的 6 種實際終端結局)
+            let badgeTitle = "永續生態領航員";
+            let feedback = "";
+            let badgeColorClass = "from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/40";
+
+            // path 記錄軌跡，例如 B-A 代表 [好]尋求科技突破 + 再生綠能
+            const pathStr = gameState.path.join('-'); 
+
+            if (pathStr.includes('A-A')) {
+                // Ending 1_1 永續平衡的新世界 [GOOD]
+                badgeTitle = "永續平衡領航員";
+                badgeColorClass = "from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/40";
+                feedback = `你引導 ${gameState.userName} 選擇了理性低能耗與減法生活的道路！這讓西元 3000 年的地球，資源始終維持在良性、平衡的狀態。每個人天天用電都不多不少，生活舒服且與大自然共融。你在反思中提到：「${gameState.playerReflection}」，這非常具有洞察力。在生活裡學會克制與珍惜，才是防止地球重演能源大崩潰最溫暖的一道屏障！`;
+            } else if (pathStr.includes('A-B')) {
+                // Ending 1_2 倒退文明的原始紀元 [BAD]
+                badgeTitle = "反文明苦行者";
+                badgeColorClass = "from-yellow-500/20 to-amber-500/20 text-amber-400 border-amber-500/40";
+                feedback = `你在遊戲中走向了極端偏激的反科技苦行。雖然 3000 年的世界毫無溫室氣體污染（碳排僅 300ppm），但這也讓我們明白：完全抹殺科技、因噎廢食並不能帶來人類的幸福。你的反思：「${gameState.playerReflection}」展現了寶貴的覺察。真正的永續是「科技與自然的和諧共存」，而非退回壽命縮短、缺乏醫療的蠻荒原始時代。`;
+            } else if (pathStr.includes('B-A')) {
+                // Ending 2_1 科技與生態的綠能極致 [GOOD]
+                badgeTitle = "星辰綠能開拓者";
+                badgeColorClass = "from-indigo-500/20 to-blue-500/20 text-blue-400 border-blue-500/40 neon-shadow-blue";
+                feedback = `太完美了！你帶領 ${gameState.userName} 堅持環境正義、孤注一擲地投入到再生綠能的技術革命中。這證明了「永續並不意味著必須倒退」！透過科技創新（仿生葉綠素、深海潮汐動力），我們能在保護地球的前提下發展出高度的文明。你寫下的反思：「${gameState.playerReflection}」字字珠璣。守護綠能與科技共融，將是你今天回到 2026 年最神聖的任務！`;
+            } else if (pathStr.includes('B-B')) {
+                // Ending 2_2 温室效應的極端煉獄 [BAD]
+                badgeTitle = "穹頂邊緣求生者";
+                badgeColorClass = "from-red-500/20 to-rose-500/20 text-red-400 border-red-500/40 neon-shadow-red";
+                feedback = `面對現實壓力，你向短視利益妥協，重啟了大量燃煤發電與不安全核能，導致大氣碳排飆升至 680ppm！這是一次極具警示性的體驗。這深刻說明：如果我們追求進步卻忘記了「環境承載力」，科技只會變成自製的囚籠，人類只能縮在防護罩中忍受 55 度的酸雨高溫。讀完你的反思：「${gameState.playerReflection}」，這份警醒希望你能在 2026 年立刻轉化為拒絕碳污染的行動！`;
+            } else if (pathStr.includes('C-A')) {
+                // Ending 3_1 資源枯竭的世界末日 [BAD]
+                badgeTitle = "不夜城史官";
+                badgeColorClass = "from-orange-500/20 to-amber-500/20 text-orange-400 border-orange-500/40";
+                feedback = `你帶領 ${gameState.userName} 發起了「不夜城計畫」，認為享樂至上。然而盲目的「開滿主義」，在短短數百年間就將地球幾十億年累積的資源徹底抽乾。世界迎來了永久的大熄燈，文明在永夜死寂中土崩瓦解。你在反思中寫道：「${gameState.playerReflection}」，這真是發人省思。生活中的「常開不關」累積起來就是不可挽回的資源耗劫。希望這趟永夜的旅行，能轉化為你在 2026 年隨手關閉電源的優雅習慣。`;
+            } else if (pathStr.includes('C-B')) {
+                // Ending 3_2 地殼熔毀與生態滅絕 [BAD]
+                badgeTitle = "極限廢土生存者";
+                badgeColorClass = "from-red-600/20 to-red-500/20 text-red-500 border-red-500/40";
+                feedback = `這是大氣碳排放達到致命 850ppm、氣候完全崩毀、宇宙射線直射、新生兒夭折率百分百的最慘烈末日。極致的超載揮霍與對環保倡議的嘲弄，換來的是種族的徹底滅絕。令人敬佩的是，面對如此極端的終局，你仍然在反思中寫下：「${gameState.playerReflection}」。這正是人類希望的火種！只要你此時此刻回到 2026 拒絕超限用電，這個廢土未來就永遠不會發生！`;
+            }
+
+            document.getElementById('certBadge').innerText = badgeTitle;
+            document.getElementById('certBadge').className = `inline-block mt-2 px-6 py-2 bg-gradient-to-r ${badgeColorClass} text-sm font-extrabold rounded-lg tracking-widest uppercase shadow-md`;
+            document.getElementById('feedbackText').innerText = feedback;
+        }
+
+        // 複製證書資訊
+        function copyCertificateInfo() {
+            const pathStr = gameState.path.join(' -> ');
+            const infoText = `【電力重組的漫遊者：3000年的關鍵抉擇】
+時空漫遊者：${gameState.userName}
+抉擇軌跡：${pathStr}
+最終世界電網：${gameState.gridPower}%
+最終大氣碳排：${gameState.carbonIndex} ppm
+解鎖榮譽稱號：[ ${document.getElementById('certBadge').innerText} ]
+我的環境反思：${gameState.playerReflection}
+--
+這款極具意義的教育遊戲，讓我深刻體會到當下做出的抉擇會如何深刻影響 3000 年的未來。讓我們一起從日常中落實環保，守護地球！`;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = infoText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showFloatingMsg("📋 證書漫遊數據已成功複製到剪貼簿！快分享給朋友吧！");
+            } catch (err) {
+                showFloatingMsg("複製失敗，請手動選取複製。");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // 重新開始遊戲
+        function restartGame() {
+            gameState = {
+                currentStep: 'setup',
+                history: [],
+                gridPower: 100,
+                carbonIndex: 350,
+                userName: "瑞廷",
+                userGender: "m",
+                playerReflection: "",
+                path: []
+            };
+
+            nameInput.value = "瑞廷";
+            document.getElementById('reflectionInput').value = "";
+            document.getElementById('reflectionGroup').classList.add('hidden');
+            document.getElementById('resetGroup').classList.add('hidden');
+            selectGender('m'); // 預設男性
+
+            document.getElementById('certificatePanel').classList.add('hidden');
+            document.getElementById('gameWindow').classList.remove('hidden');
+
+            renderScene('setup');
+        }
+
+        // === 11. 初始化啟動遊戲 ===
+        window.onload = function() {
+            renderScene('setup');
+        };
+    </script>
+</body>
+</html>
